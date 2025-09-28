@@ -1,0 +1,115 @@
+#include <iostream>
+
+namespace Utils
+{
+    int gcd(int a, int b)
+    {
+        if (a < 0)
+        {
+            a = -a;
+        }
+        if (b < 0)
+        {
+            b = -b;
+        }
+        while (b != 0)
+        {
+            int t = a % b;
+            a = b;
+            b = t;
+        }
+        return a == 0 ? 1 : a;
+    }
+}
+
+namespace Math
+{
+    class Fraction
+    {
+    private:
+        int numerator;
+        int denominator;
+
+        void reduce() {
+            if (denominator == 0)
+            {
+                return;
+            }
+            int g = Utils::gcd(numerator, denominator);
+            numerator /= g;
+            denominator /= g;
+            if (denominator < 0)
+            {
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+        }
+
+    public:
+        Fraction(int n = 0, int d = 1) : numerator(n), denominator(d)
+        {
+            reduce();
+        }
+
+        Fraction operator+(const Fraction& other) const
+        {
+            return Fraction(numerator * other.denominator + other.numerator * denominator,
+                denominator * other.denominator);
+        }
+
+        void Show() const
+        {
+            std::cout << numerator << "/" << denominator << "\n";
+        }
+    };
+}
+
+namespace Geometry
+{
+    class Point2D
+    {
+    private:
+        double x, y;
+    public:
+        Point2D(double x = 0, double y = 0) : x(x), y(y) {}
+        void Show() const
+        {
+            std::cout << "Point2D(" << x << ", " << y << ")\n";
+        }
+    };
+
+    class Point3D
+    {
+    private:
+        double x, y, z;
+    public:
+        Point3D(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
+        void Show() const
+        {
+            std::cout << "Point3D(" << x << ", " << y << ", " << z << ")\n";
+        }
+    };
+}
+
+int main()
+{
+    using namespace Math;
+    using namespace Geometry;
+
+    std::cout << "Fraction test:\n";
+    Fraction f1(6, 8), f2(3, 9);
+    f1.Show();
+    f2.Show();
+    Fraction f3 = f1 + f2;
+    std::cout << "f1 + f2 = ";
+    f3.Show();
+
+    std::cout << "\nGeometry test:\n";
+    Point2D p1(2, 3);
+    Point3D p2(1, 2, 3);
+
+    p1.Show();
+    p2.Show();
+
+    return 0;
+}
